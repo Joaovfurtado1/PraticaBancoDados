@@ -1,0 +1,37 @@
+/* LISTAR OS FILMES E SEUS DEVIDOS IDIOMAS*/ 
+
+SELECT F.TITLE, L.NAME AS IDIOMA FROM FILM F 
+LEFT JOIN LANGUAGE L ON F.LANGUAGE_ID = L.LANGUAGE_ID;
+
+/*Quantidade de filmes alugados por cliente */
+
+SELECT C.FIRST_NAME, C.LAST_NAME, COUNT(*)
+FROM CUSTOMER C
+LEFT JOIN RENTAL R ON C.CUSTOMER_ID = R.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID;
+
+/* OU */
+
+SELECT CONCAT(c.first_name," ", c.last_name) AS CLIENTE, COUNT(*) QUANTIDADE
+FROM customer c, rental r
+WHERE c.customer_id = r.customer_id
+GROUP BY (c.customer_id);
+
+/* Quantidade de filmes alugados por cliente em ordem decrescente de quantidade de filmes alugados */
+
+SELECT C.FIRST_NAME, C.LAST_NAME, COUNT(*) QUANTIDADE
+FROM CUSTOMER C
+LEFT JOIN RENTAL R ON C.CUSTOMER_ID = R.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID
+ORDER BY QUANTIDADE DESC;
+
+/* Relação de nomes dos clientes que possuem um filme alugado no momento
+ */
+ 
+SELECT C.FIRST_NAME, C.LAST_NAME
+FROM CUSTOMER C
+WHERE EXISTS (SELECT 1 
+	FROM RENTAL R
+    LEFT JOIN CUSTOMER C ON C.CUSTOMER_ID =R.CUSTOMER_ID
+    WHERE R.RETURN_DATE IS NOT NULL);
+
